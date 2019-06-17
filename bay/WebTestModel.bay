@@ -1,0 +1,57 @@
+namespace BayrellLang.WebTest;
+
+use Runtime.CoreStruct;
+use BayrellLang.LangBay.ParserBay;
+use BayrellLang.LangES6.TranslatorES6Factory;
+use BayrellLang.LangNodeJS.TranslatorNodeJSFactory;
+use BayrellLang.LangPHP.TranslatorPHPFactory;
+use BayrellLang.OpCodes.BaseOpCode;
+use BayrellLang.Utils as BayrellLangUtils;
+
+
+struct WebTestModel extends CoreStruct
+{
+	
+	public string input = "";
+	public string output = "";
+	public string error = "";
+	public BaseOpCode op_code = null;
+	public primitive exception = null;
+	
+	
+	static WebTestModel translate(ContextInterface context, WebTestModel model, string lang = "")
+	{
+		string output = "";
+		string error = "";
+		BaseOpCode op_code = null;
+		Exception err = null;
+		FactoryInterface factory = new TranslatorES6Factory();
+		FactoryInterface factory = new TranslatorPHPFactory();
+		
+		try
+		{
+			CommonTranslator translator = factory.newInstance(context);
+			CommonParser parser = new ParserBay(context);
+			parser.parseString(model.input);
+			op_code = parser.getAST();
+			output = translator.translateOpCode(op_code);
+		}
+		catch (var e)
+		{
+			err = e;
+			error = e.getErrorMessage();
+		}
+		
+		model = model.copy({
+			"output": output,
+			"error": error,
+			"exception": err,
+			"op_code": op_code,
+		});
+		
+		return model;
+	}
+	
+	
+	
+}

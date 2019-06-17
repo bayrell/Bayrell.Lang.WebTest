@@ -1,0 +1,59 @@
+namespace BayrellLang.WebTest;
+
+use Core.UI.Annotations.Event;
+use Core.UI.Annotations.EventAsync;
+use Core.UI.Events.MouseEvent.MouseClickEvent;
+use Core.UI.Events.MouseEvent.MouseContextMenuEvent;
+use Core.UI.Render.CoreView;
+use BayrellLang.WebTest.WebTestModel;
+
+
+struct WebTest extends CoreView
+{
+
+	/**
+	 * Component css
+	 */
+	lambda string css(Dict<string> vars) =>
+		@css{
+			%input, %output{
+				display: inline-block;
+				width: 50%;
+				height: calc(100vh - 50px);
+				font-size: 14px;
+			}
+			%row{
+				text-align: center;
+			}
+			%error{
+				color: red;
+			}
+		}
+	;
+	
+	
+	
+	/**
+	 * Component render
+	 */
+	lambda Collection<UIStruct> render(WebTestModel model, UIStruct ui) =>
+	
+		<div @class="row">
+			<textarea @class="input" @bind="input">@raw{ model.input }</textarea>
+			<textarea @class="output" @bind="output">@raw{ model.output }</textarea>
+		</div>
+		<div @class="row">
+			<button 
+				@annotations=[
+					new Event{ "event": classof MouseClickEvent, "method_name": "clickButton" }
+				]
+			>Compile</button>
+		</div>
+		<div @class="row error">
+			{ model.error }
+		</div>
+		
+	;
+	
+	
+}

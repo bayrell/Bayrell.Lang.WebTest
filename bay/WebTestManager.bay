@@ -1,0 +1,42 @@
+namespace BayrellLang.WebTest;
+
+use Core.UI.UIController;
+use Core.UI.Annotations.Event;
+use Core.UI.Annotations.EventAsync;
+use Core.UI.Events.MouseEvent.MouseClickEvent;
+use Core.UI.Events.MouseEvent.MouseContextMenuEvent;
+use Core.UI.Events.UserEvent.ChangeEvent;
+use Core.UI.Render.CoreManager;
+use Core.UI.UIEvent;
+use BayrellLang.Utils as BayrellLangUtils;
+use BayrellLang.LangES6.TranslatorES6Factory;
+use BayrellLang.LangES6.TranslatorNodeJSFactory;
+use BayrellLang.LangES6.TranslatorPHPFactory;
+use BayrellLang.WebTest.WebTestModel;
+
+
+class WebTestManager extends CoreManager
+{
+	WebTestModel model;
+	
+	
+	/**
+	 * Click button
+	 */
+	public void clickButton(UIEvent e)
+	{
+		WebTestModel model = WebTestModel::translate(context, this.model);
+		if (this.model.exception != null)
+		{
+			console.log(model.exception);
+		}
+		else
+		{
+			console.log(model.op_code);
+		}
+		this.setModel(model);
+	}
+	
+	
+	
+}
